@@ -401,7 +401,7 @@ div.tocify {
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/nn_tune.rda&quot;</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/rf_tune.rda&quot;</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/bt_tune.rda&quot;</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#load(&quot;~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/svm_poly_tune.rda&quot;)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/svm_poly_tune.rda&quot;</span>)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/svm_radial_tune.rda&quot;</span>)</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/neural_tune.rda&quot;</span>)</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/mars_tune.rda&quot;</span>)</span></code></pre></div>
@@ -413,25 +413,23 @@ div.tocify {
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">show_best</span>(en_tune, <span class="at">metric =</span> <span class="st">&quot;accuracy&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span><span class="fu">show_best</span>(rf_tune, <span class="at">metric =</span> <span class="st">&quot;accuracy&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">show_best</span>(bt_tune, <span class="at">metric =</span> <span class="st">&quot;accuracy&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#e &lt;- show_best(svm_poly_tune, metric = &quot;accuracy&quot;) %&gt;% head(1)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">show_best</span>(svm_poly_tune, <span class="at">metric =</span> <span class="st">&quot;accuracy&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="fu">show_best</span>(svm_radial_tune, <span class="at">metric =</span> <span class="st">&quot;accuracy&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">show_best</span>(neural_tune, <span class="at">metric =</span> <span class="st">&quot;accuracy&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span><span class="fu">show_best</span>(mars_tune, <span class="at">metric =</span> <span class="st">&quot;accuracy&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">full_join</span>(a,b)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">full_join</span>(c,d)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#y &lt;- full_join(e,f)</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> f</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">full_join</span>(g,h)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">full_join</span>(w,x)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">full_join</span>(y,z)</span></code></pre></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">full_join</span>(e,f)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">full_join</span>(g,h)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">full_join</span>(w,x)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">full_join</span>(y,z)</span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Table1 <span class="ot">&lt;-</span> <span class="fu">full_join</span>(m,n) <span class="sc">%&gt;%</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(<span class="fu">c</span>(<span class="sc">-</span>neighbors,<span class="sc">-</span>penalty,<span class="sc">-</span>mixture,<span class="sc">-</span>n,<span class="sc">-</span>mtry<span class="sc">:-</span>prod_degree)) <span class="sc">%&gt;%</span> </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">add_column</span>(<span class="at">Model_Type =</span> <span class="fu">c</span>(<span class="st">&quot;Nearest Neighbor&quot;</span>,</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;Elastic Net&quot;</span>,</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;Random Forest&quot;</span>,</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;Boosted Tree&quot;</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># &quot;Svm Poly&quot;,</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;Svm Poly&quot;</span>,</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;Svm Radial&quot;</span>,</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;Single Layer Neural Network&quot;</span>,</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;MARS&quot;</span>)) <span class="sc">%&gt;%</span></span>
@@ -447,13 +445,13 @@ div.tocify {
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>en_runtime</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>rf_runtime</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>bt_runtime</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#svm_poly_runtime</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>svm_poly_runtime</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>svm_radial_runtime</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>slnn_runtime</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>mars_runtime</span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Table2 <span class="ot">&lt;-</span> <span class="fu">data_frame</span>(</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">Model_Type =</span> <span class="fu">c</span>(<span class="st">&quot;Nearest Neighbor&quot;</span>,<span class="st">&quot;Elastic Net&quot;</span>,<span class="st">&quot;Random Forest&quot;</span>,<span class="st">&quot;Boosted Tree&quot;</span>,<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;Svm Radial&quot;</span>,<span class="st">&quot;Single Layer Neural Network&quot;</span>,<span class="st">&quot;MARS&quot;</span>),</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">Run_time_in_seconds =</span> <span class="fu">c</span>(<span class="st">&quot;37.969&quot;</span>,<span class="st">&quot;204.897&quot;</span>,<span class="st">&quot;357.19&quot;</span>,<span class="st">&quot;729.952&quot;</span>, <span class="st">&quot;xxx&quot;</span>, <span class="st">&quot;251.137&quot;</span>, <span class="st">&quot;141.148&quot;</span>, <span class="st">&quot;83.548&quot;</span>))   <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>   <span class="at">Model_Type =</span> <span class="fu">c</span>(<span class="st">&quot;Nearest Neighbor&quot;</span>,<span class="st">&quot;Elastic Net&quot;</span>,<span class="st">&quot;Random Forest&quot;</span>,<span class="st">&quot;Boosted Tree&quot;</span>,<span class="st">&quot;Svm Poly&quot;</span>,<span class="st">&quot;Svm Radial&quot;</span>,<span class="st">&quot;Single Layer Neural Network&quot;</span>,<span class="st">&quot;MARS&quot;</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">Run_time_in_seconds =</span> <span class="fu">c</span>(<span class="st">&quot;37.969&quot;</span>,<span class="st">&quot;204.897&quot;</span>,<span class="st">&quot;357.19&quot;</span>,<span class="st">&quot;729.952&quot;</span>, <span class="st">&quot; 140.075&quot;</span>, <span class="st">&quot;251.137&quot;</span>, <span class="st">&quot;141.148&quot;</span>, <span class="st">&quot;83.548&quot;</span>))   <span class="sc">%&gt;%</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>()</span></code></pre></div>
 </div>
@@ -585,6 +583,26 @@ binary
 </tr>
 <tr>
 <td style="text-align:left;">
+Svm Poly
+</td>
+<td style="text-align:left;">
+Preprocessor1_Model23
+</td>
+<td style="text-align:right;">
+0.7837579
+</td>
+<td style="text-align:left;">
+accuracy
+</td>
+<td style="text-align:left;">
+binary
+</td>
+<td style="text-align:right;">
+0.0083331
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 Svm Radial
 </td>
 <td style="text-align:left;">
@@ -692,10 +710,10 @@ Boosted Tree
 </tr>
 <tr>
 <td style="text-align:left;">
-xxx
+Svm Poly
 </td>
 <td style="text-align:left;">
-xxx
+140.075
 </td>
 </tr>
 <tr>
