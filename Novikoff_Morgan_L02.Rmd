@@ -1,0 +1,192 @@
+---
+title: "L02 More Models"
+subtitle: "Data Science III (STAT 301-3)"
+author: "Morgan Novikoff"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    highlight: "tango"
+
+---
+
+## Overview
+
+The main goals of this lab are (1) review and practice the application of machine learning within the `tyidymodels` framework and (2) introduce and explore a few new model types.
+
+## Project Goal
+
+This project attempts to explore the statistical relationship between a number of factors and whether a fire reached the wildlife protection zone. The data for this project uses a dataset that describes 500 wildfires that started within a large national park
+
+## Load Packages and Prep Data
+
+We will be utilizing `wildfires.csv` dataset contained in the **data** subdirectory. `wildfires_codebook.html` provides a quick overview of the data which is where students should begin.
+
+
+```{r message=FALSE, warning=FALSE}
+# Load package(s)
+library(tidymodels)
+library(tidyverse)
+library(tictoc)
+library(kableExtra)
+
+set.seed(3013)
+
+## load data
+wildfires_dat <- read_csv("data/wildfires.csv") %>%
+  janitor::clean_names() %>% 
+  mutate(
+    winddir = factor(winddir, levels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW")),
+    traffic = factor(traffic, levels = c("lo", "med", "hi")),
+    wlf = factor(wlf, levels = c(1, 0), labels = c("yes", "no"))
+  ) %>%
+  select(-burned)
+
+```
+
+
+```{r message=FALSE, warning=FALSE}
+wildfire_split <- initial_split(wildfires_dat, prop = 0.8, strata = wlf) 
+
+wildfire_train <- training(wildfire_split) 
+wildfire_test <- testing(wildfire_split)
+
+wildfire_folds <- vfold_cv(wildfire_train, v = 10, repeats = 5, strata = wlf) 
+```
+
+## Modeling
+```{r message=FALSE, warning=FALSE}
+
+wildfire_rec <- wildfire_train %>% 
+                recipe(wlf ~ . ) %>%
+                step_dummy(winddir, one_hot = TRUE) %>%
+                step_dummy(traffic, one_hot = TRUE) %>%
+                step_center(all_predictors()) %>%
+                step_scale(all_predictors())
+
+wildfire_rec %>% 
+  prep(wildfire_train) %>% 
+  bake(new_data = NULL) %>% 
+  view() 
+```
+
+
+### Load R-scripts
+```{r message=FALSE, warning=FALSE}
+load("~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/en_tune.rda")
+load("~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/nn_tune.rda")
+load("~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/rf_tune.rda")
+load("~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/bt_tune.rda")
+#load("~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/svm_poly_tune.rda")
+load("~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/svm_radial_tune.rda")
+load("~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/neural_tune.rda")
+load("~/Desktop/Stat_301-3/Novikoff_Morgan_L02/model_info/mars_tune.rda")
+```
+
+### Collect Metrics
+```{r message=FALSE, warning=FALSE}
+# Accuracy of each model
+a <- show_best(nn_tune, metric = "accuracy") %>% head(1)
+b <- show_best(en_tune, metric = "accuracy") %>% head(1)
+c <-show_best(rf_tune, metric = "accuracy") %>% head(1)
+d <- show_best(bt_tune, metric = "accuracy") %>% head(1)
+#e <- show_best(svm_poly_tune, metric = "accuracy") %>% head(1)
+f <- show_best(svm_radial_tune, metric = "accuracy") %>% head(1)
+g <- show_best(neural_tune, metric = "accuracy") %>% head(1)
+h <-show_best(mars_tune, metric = "accuracy") %>% head(1)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+w <- full_join(a,b)
+x <- full_join(c,d)
+#y <- full_join(e,f)
+y <- f
+z <- full_join(g,h)
+
+m <- full_join(w,x)
+n <- full_join(y,z)
+
+```
+
+```{r message=FALSE, warning=FALSE}
+Table1 <- full_join(m,n) %>% 
+select(c(-neighbors,-penalty,-mixture,-n,-mtry:-prod_degree)) %>% 
+add_column(Model_Type = c("Nearest Neighbor",
+                     "Elastic Net",
+                     "Random Forest",
+                     "Boosted Tree",
+                    # "Svm Poly",
+                     "Svm Radial",
+                     "Single Layer Neural Network",
+                     "MARS")) %>%
+  select(Model_Type, .config, mean, .metric:std_err) %>%
+  rename(Best_Preprocessor_Model = .config) %>%
+  kbl() %>%
+  kable_styling()
+                     
+```
+
+
+### Collect Run-time 
+```{r message=FALSE, warning=FALSE, results='hide'}
+# Time elapsed
+nn_runtime
+en_runtime
+rf_runtime
+bt_runtime
+#svm_poly_runtime
+svm_radial_runtime
+slnn_runtime
+mars_runtime
+```
+
+```{r message=FALSE, warning=FALSE}
+Table2 <- data_frame(
+   Model_Type = c("Nearest Neighbor","Elastic Net","Random Forest","Boosted Tree","xxx","Svm Radial","Single Layer Neural Network","MARS"),
+   Run_time_in_seconds = c("37.969","204.897","357.19","729.952", "xxx", "251.137", "141.148", "83.548"))   %>%
+  kbl() %>%
+  kable_styling()
+```
+
+
+
+### Applying the Model to Test Data, Measuring Results
+
+```{r message=FALSE, warning=FALSE}
+set.seed(3013) 
+
+slnn_workflow_tuned <- neural_workflow %>%
+  finalize_workflow(select_best(neural_tune, metric = "accuracy"))
+
+slnn_results <- fit(slnn_workflow_tuned, wildfire_train)
+
+Table3 <- predict(slnn_results, new_data = wildfire_test) %>% 
+  bind_cols(wildfire_test %>% select(wlf)) %>% 
+  accuracy(truth = wlf, estimate = .pred_class) %>%
+  add_column(Model_Type = "Single Layer Neural Network") %>%
+  select(Model_Type, .metric:.estimate) %>%
+    kbl() %>%
+  kable_styling()
+```
+
+## Short Report and Conclusion
+<br>
+To conclude:
+<br>
+1. It appears that the Single Level Neural Network fits my data the best. Though the Elastic Net also performed well, and most of the other models' performances only deviated slightly, the SLNN performs the best. (I chose to use accuracy as the mode of comparison because it is relatively simple to interpret across models). Overall, my model does a good job of predicting whether a fire will reach the wildlife protection zone given predictor variables. 
+<br>
+2. The Single Layer Neural Network had the third lowest run-time out of all the models. The only ones that ran faster were the Nearest Neighbor and MARS model. There is a huge different in run times across models, however, I think that this has to do with when I ran local jobs, how many jobs I was running at a time, and how long my computer had been on prior to doing so. When running multiple jobs at once, they all, on average, took longer to complete. 
+<br>
+3.The model’s testing accuracy was slightly higher than to the best accuracy of the folds. This indicates that the model does a better job of predicting on the testing data set than it did across the folds of the data set.
+```{r message=FALSE, warning=FALSE}
+Table1
+Table2
+Table3
+```
+
+
+
+## Github Repo Link
+
+[https://github.com/mbnovikoff/-L02-more-models.git](https://github.com/mbnovikoff/-L02-more-models.git){target="_blank"}
