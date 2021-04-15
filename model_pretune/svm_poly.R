@@ -20,7 +20,7 @@ svm_poly_model <-
 svm_poly_param <- parameters(svm_poly_model)
 
 # Grid
-svm_poly_grid <- grid_regular(svm_poly_param, levels = 5)
+svm_poly_grid <- grid_regular(svm_poly_param, levels = 3)
 
 # Workflow
 svm_poly_workflow <- workflow() %>%
